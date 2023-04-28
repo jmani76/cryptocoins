@@ -9,4 +9,5 @@ Feature: Filtering UI
 
   Scenario:
     Given I'm on coin market cap website homepage
-    When I limit the rows to 20
+    When I limit the max rows to show at 20
+    Then Only 20 rows are loaded

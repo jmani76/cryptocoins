@@ -3,20 +3,20 @@
 const { Before, BeforeAll, AfterAll, After, setDefaultTimeout } = require("@cucumber/cucumber");
 const { chromium } = require("playwright");
 
-setDefaultTimeout(60000)
+setDefaultTimeout(60000);
+require('dotenv').config()
 
 // launch the browser
 BeforeAll(async function () {
+    var headlessMode = (process.env.COINTMARKETCAP_HEADLESS === 'true');
     global.browser = await chromium.launch({
-        headless: false,
+        headless: headlessMode,
         slowMo: 1000,
     });
-
 });
 
 // close the browser
 AfterAll(async function () {
-
     await global.browser.close();
 });
 
