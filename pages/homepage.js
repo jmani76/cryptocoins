@@ -1,3 +1,5 @@
+const {ClickInSequence, ClickOnElement, TypeIntoField} = require('./common');
+
 // locators
 const locators = {
     "Modal_Dialog": "//*[name()='svg' and @class='sc-aef7b723-0 fKbUaI close-button']//*",
@@ -14,66 +16,13 @@ const locators = {
     "Max_Price":"//input[@data-qa-id='range-filter-input-max']"
 };
 
-async function GetElement(element_locator, index= 0){
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (element_locator === undefined) {
-                reject("No locator string provided!");
-            }
-
-            let element = await page.locator(element_locator).nth(index);
-
-            if (element !== undefined) {
-                resolve(element);
-            }
-            else {
-                reject("Failed to locate element with locator: " + element_locator);
-            }
-        }
-        catch (error) {
-            console.error(`Caught error in GetElement: ${error}`);
-            reject(error);
-        }
-    });
-}
-
-async function TypeIntoField(element_locator, field_input,  element_index= 0){
-    return new Promise(async (resolve, reject) => {
-        try {
-            let elementLocator = await GetElement(element_locator, element_index);
-            if (elementLocator !== undefined) {
-                elementLocator.fill(field_input);
-                resolve(true);
-            } else {
-                resolve(false);
-            }
-        }
-        catch (error) {
-            console.error(`Caught error in TypeIntoField: ${error}`);
-            reject(error);
-        }
-    });
-}
-
-async function ClickOnElement(element_locator, index=0) {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let element = await GetElement(element_locator, index);
-            if (element !== undefined) {
-                await element.click({force: true});
-                resolve(true);
-            }
-            else {
-                console.error("Failed to locate element, so click action cannot be performed!");
-                resolve(false);
-            }
-        } catch (error) {
-            console.error(`Caught error in ClickOnElement: ${error}`);
-            reject(error);
-        }
-    });
-}
-
+/**
+ * This method takes number of rows to set on a specific drop down element
+ * on coin market cap website. Though not validated, the current allowed
+ * values on the website for this field are: 20, 50 and 100.
+ * @param number_of_rows - Sets the table to refresh and show the required number of rows.
+ * @returns {Promise<boolean>} - If the setting action is completed successfully.
+ */
 async function SetRows(number_of_rows) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -91,6 +40,13 @@ async function SetRows(number_of_rows) {
     });
 }
 
+/**
+ * This method validates that the rows set by the drop-down field in the method: SetRows
+ * has actually resolved to those many expected rows only. By looking for a string in the page
+ * that displays how many rows are being displayed currently.
+ * @param number_of_rows - Validate that the string captured to validate the showing of rows, contains this value.
+ * @returns {Promise<boolean>} - If the string is captured and validated successfully.
+ */
 async function VerifyNumberOfRowsOnDisplay(number_of_rows){
     return new Promise(async (resolve, reject) => {
         try {
@@ -110,39 +66,12 @@ async function VerifyNumberOfRowsOnDisplay(number_of_rows){
     })
 }
 
-async function CaptureMarketCapParameters(maxSlice) {
-    return new Promise(async (resolve, reject) => {
-        try {
-            await page.waitForSelector('table');
-            const capturedRows = await page.$$eval('table tbody tr', (rows, maxSlice) => {
-                return rows.slice(0, maxSlice).map(row => {
-                    const columns = row.querySelectorAll('td');
-                    return {
-                        rank: columns[1]?.innerText.trim(),
-                        name: columns[2]?.innerText.trim().replace(/\n+/g, ' '),
-                        price: columns[3]?.innerText,
-                        marketCap: columns[7]?.innerText.trim(),
-                        volume: columns[8]?.innerText.trim().split('\n\n')[0],
-                        volumePrice: columns[8]?.innerText.trim().split('\n\n')[1],
-                        circulatingSupply: columns[9]?.innerText.trim()
-                    };
-                });
-            }, maxSlice);
-            if(capturedRows !== undefined) {
-                resolve(capturedRows);
-            }
-            else {
-                resolve([]);
-            }
-        }
-        catch (error) {
-            console.error(`Caught error in CaptureMarketCapParameters: ${error}`);
-            reject([]);
-        }
-    });
-
-}
-
+/**
+ * This method, clicks on the filters button above the table and sets the Algorithm to a value
+ * provided by the user.
+ * @param algorithmType - The type of algorithm specified by user.
+ * @returns {Promise<boolean>} - If given algorithm is set successfully.
+ */
 async function ChooseAnAlgorithm(algorithmType){
     return new Promise(async (resolve, reject) => {
         try {
@@ -164,28 +93,15 @@ async function ChooseAnAlgorithm(algorithmType){
     });
 }
 
-async function ClickInSequence(elementLocator, itemsToClick){
-    return new Promise(async(resolve, reject) => {
-        try {
-            let clickedAll = true;
-            for (const item of itemsToClick) {
-                let filterLocator = elementLocator.replace('REPLACE_ME', item);
-                if (clickedAll) {
-                    clickedAll = await ClickOnElement(filterLocator);
-                }
-                else {
-                    break;
-                }
-            }
-            resolve(clickedAll);
-        }
-        catch (error) {
-            console.error(`Caught error in ClickInSequence: ${error}`);
-            reject(false);
-        }
-    });
-}
-
+/**
+ * This method takes 4 parameters as given below and applies the same into More filters option above the given
+ * table to narrow the results for user to focus on the cryptos that are of interest to them.
+ * @param filterType - This can be All Cryptocurrencies, Coins and Tokens
+ * @param toggleMineable - This either toggles the mineable currencies to true or false
+ * @param minPrice - This sets the Price range to the min required
+ * @param maxPrice - This sets the Price range to the max allowed.
+ * @returns {Promise<boolean>} - If all the given filters are applied successfully
+ */
 async function SetMoreFilters(filterType, toggleMineable, minPrice, maxPrice) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -234,6 +150,58 @@ async function SetMoreFilters(filterType, toggleMineable, minPrice, maxPrice) {
     });
 }
 
+/**
+ * This method, possibly can be refactored and moved into common.js file considering it gets all the rows
+ * of a table on display and then slices the columns for the expected page contents such as
+ * rank, name, price, market cap, volume and supply in circulation.
+ * Currently, the number of rows to work up on is given as the maxSlice parameter - basically this limits
+ * the function to work on a smaller or larger set of rows based on one's requirements.
+ * @param maxSlice - The maximum rows to work with
+ * @returns {Promise<array>} - If the expected rows and column values are captured into an array successfully.
+ */
+async function CaptureMarketCapParameters(maxSlice) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await page.waitForSelector('table');
+            const capturedRows = await page.$$eval('table tbody tr', (rows, maxSlice) => {
+                return rows.slice(0, maxSlice).map(row => {
+                    const columns = row.querySelectorAll('td');
+                    return {
+                        rank: columns[1]?.innerText.trim(),
+                        name: columns[2]?.innerText.trim().replace(/\n+/g, ' '),
+                        price: columns[3]?.innerText,
+                        marketCap: columns[7]?.innerText.trim(),
+                        volume: columns[8]?.innerText.trim().split('\n\n')[0],
+                        volumePrice: columns[8]?.innerText.trim().split('\n\n')[1],
+                        circulatingSupply: columns[9]?.innerText.trim()
+                    };
+                });
+            }, maxSlice);
+            if(capturedRows !== undefined) {
+                resolve(capturedRows);
+            }
+            else {
+                resolve([]);
+            }
+        }
+        catch (error) {
+            console.error(`Caught error in CaptureMarketCapParameters: ${error}`);
+            reject([]);
+        }
+    });
+
+}
+
+/**
+ * This method, takes an (expected) array of json objects captured before filters were applied (unfiltered) and
+ * another array (received) of json objects captured after filters were applied.
+ * Then compares each of those json object's properties to find if they are same, if not adds them into a mismatched
+ * array. This mismatched array when it is empty means both expected and received are the same.
+ * @param expected - This contains an array of unfiltered results captured before filters are applied
+ * @param received - This contains an array of results captured after filters are applies
+ * @returns {Promise<array>} - The contents of this array is contains objects of expected and received
+ *                             if they vary in any of their properties
+ */
 async function CompareCapturedPageContents(expected, received) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -257,12 +225,37 @@ async function CompareCapturedPageContents(expected, received) {
     });
 }
 
+/**
+ * Module exports of various functions and json types.
+ * @type {
+ * {
+ *    locators: {
+ *        Filters_Button: string,
+ *        Filter_Options: string,
+ *        Max_Price: string,
+ *        Page_Title: string,
+ *        Choose_Rows_Value: string,
+ *        Select_Algorithm: string,
+ *        Verify_Rows_On_Display: string,
+ *        Filter_Mineable_Toggle: string,
+ *        Min_Price: string,
+ *        Choose_Algorithm_Option: string,
+ *        Select_Rows: string,
+ *        Modal_Dialog: string
+ *    },
+ *    SetRows: (function(*): Promise<boolean>),
+ *    VerifyNumberOfRowsOnDisplay: (function(*): Promise<boolean>),
+ *    SetMoreFilters: (function(*, *, *, *): Promise<boolean>),
+ *    ChooseAnAlgorithm: (function(*): Promise<boolean>),
+ *    CaptureMarketCapParameters: (function(*): Promise<array>),
+ *    CompareCapturedPageContents: (function(*, *): Promise<array>)}}
+ */
 module.exports = {
     locators,
     SetRows,
     VerifyNumberOfRowsOnDisplay,
-    CaptureMarketCapParameters,
-    ChooseAnAlgorithm,
     SetMoreFilters,
+    ChooseAnAlgorithm,
+    CaptureMarketCapParameters,
     CompareCapturedPageContents
 };
