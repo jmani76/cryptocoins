@@ -9,7 +9,7 @@ require('dotenv').config()
 // launch the browser
 BeforeAll(async function () {
     if (process.env.COINMARKETCAP_RUN_API_ONLY === 'true') return;
-    const headlessMode = (process.env.COINTMARKETCAP_HEADLESS === 'true');
+    const headlessMode = (process.env.COINMARKETCAP_HEADLESS === 'true');
     global.browser = await chromium.launch({
         headless: headlessMode,
         slowMo: 1000,
