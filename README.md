@@ -26,6 +26,8 @@ The run this solution, the following 2 should be installed on your system.
 
 2. [yarn](https://classic.yarnpkg.com/lang/en/docs/install/) package manager should also be installed (locally to the projects folder or globally).
 
+3. Latest Chrome browser to be installed and available for testing. The code is currently set to launch chromium instance for automation testing.
+
 ## Getting started
 
 Once pre-requisites are satisfied on your system and assuming you have your project folder 
@@ -34,21 +36,25 @@ configured in your local machine as:
 Windows&nbsp;&nbsp;&nbsp;: **c:\projects**<br>
 Mac/Linux : **~/projects**
 
-the below instructions should be common to all operating systems.
+the below instructions should be common to all operating systems. 
 
 ```sh
 git clone https://github.com/jmani76/cryptocoins.git   # clone the project into your projects folder          
 
 touch .env                                             # this represents a file which holds various environment values
+                                                       # On Windows OS, use "notepad .env" to create dot env file
 ```
 
 Edit the .env file and add the following Key=Values
+Also remove the comments given below in your actual .env file
+In the below, I've used coinmarketcap's pro-api baseurl, you can also replace it with the sandbox api baseurl
+which at the time of writing this document was: https://sandbox-api.coinmarketcap.com, this helps in not exhausting your free credits.
 
 ```sh
-COINMARKETCAP_API_KEY=YOUR_OWN_API_KEYS  # This key is required for API test.
+COINMARKETCAP_API_KEY=YOUR_OWN_API_KEYS  # This key is required for API test with coinmarketcap.
 COINMARKETCAP_CLOSE_HOMEPAGE_MODAL=false # Occasionally the website shows modal dialogs on homepage
 COINMARKETCAP_HEADLESS=false             # You would change this to 'true' when executing in CI/CD pipeline
-COINMARKETCAP_API_BASEURL=https://sandbox-api.coinmarketcap.com
+COINMARKETCAP_API_BASEURL=https://pro-api.coinmarketcap.com
 COINMARKETCAP_RUN_API_ONLY=false         # This works in conjunction with the test-api command in package.json
 ```
 
