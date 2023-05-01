@@ -4,8 +4,8 @@ const {ClickInSequence, ClickOnElement, TypeIntoField} = require('./common');
 const locators = {
     "Modal_Dialog": "//*[name()='svg' and @class='sc-aef7b723-0 fKbUaI close-button']//*",
     "Page_Title": "Cryptocurrency Prices, Charts And Market Capitalizations | CoinMarketCap",
-    "Select_Rows": "//*/div[contains(.,'100') and contains(@class,'dBikMg')]",
-    "Choose_Rows_Value": "//*/button[contains(., 'REPLACE_ME')]",
+    "Select_Rows": "//p[text() = 'Show rows']/../div",
+    "Choose_Rows_Value": "//button[contains(@class, 'sc-44910c32-0 kppgZc') and contains(., 'REPLACE_ME')]",
     "Verify_Rows_On_Display": "//*/p[contains(.,'Showing 1 - REPLACE_ME out of ')]",
     "Filters_Button": "//span[contains(@class, 'icon-Slider')]",
     "Select_Algorithm": "//button[contains(@class, 'cmPAGl') and contains(., 'Algorithm')]",
@@ -26,7 +26,7 @@ const locators = {
 async function SetRows(number_of_rows) {
     return new Promise(async (resolve, reject) => {
         try {
-            let clickStatus = await ClickOnElement(locators.Select_Rows);
+            let clickStatus = await ClickOnElement(locators.Select_Rows, 1);
             if (clickStatus) {
                 let row_value_selector=
                     locators.Choose_Rows_Value.replace("REPLACE_ME", number_of_rows);

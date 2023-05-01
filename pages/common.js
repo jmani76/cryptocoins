@@ -63,7 +63,8 @@ async function ClickOnElement(element_locator, index=0) {
         try {
             let element = await GetElement(element_locator, index);
             if (element !== undefined) {
-                await element.click({force: true});
+                await page.waitForLoadState('networkidle')
+                await element.click();
                 resolve(true);
             }
             else {
