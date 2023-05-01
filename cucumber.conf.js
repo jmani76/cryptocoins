@@ -8,7 +8,8 @@ require('dotenv').config()
 
 // launch the browser
 BeforeAll(async function () {
-    var headlessMode = (process.env.COINTMARKETCAP_HEADLESS === 'true');
+    if (process.env.COINMARKETCAP_RUN_API_ONLY === 'true') return;
+    const headlessMode = (process.env.COINTMARKETCAP_HEADLESS === 'true');
     global.browser = await chromium.launch({
         headless: headlessMode,
         slowMo: 1000,
@@ -17,17 +18,20 @@ BeforeAll(async function () {
 
 // close the browser
 AfterAll(async function () {
+    if (process.env.COINMARKETCAP_RUN_API_ONLY === 'true') return;
     await global.browser.close();
 });
 
 // Create a new browser context and page per scenario
 Before(async function () {
+    if (process.env.COINMARKETCAP_RUN_API_ONLY === 'true') return;
     global.context = await global.browser.newContext();
     global.page = await global.context.newPage();
 });
 
 // Cleanup after each scenario
 After(async function () {
+    if (process.env.COINMARKETCAP_RUN_API_ONLY === 'true') return;
     await global.page.close();
     await global.context.close();
 });

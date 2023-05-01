@@ -1,9 +1,9 @@
+@ui
 Feature: Filtering UI
 
   Description: This feature file mainly covers a user visiting the coin market cap website
   and apply relevant filters to narrow down the results and undertake comparison
   based on the page content.
-
 
   Scenario: Filtering UI and extracting data for comparison
     Given I am on "https://coinmarketcap.com/" website
