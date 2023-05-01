@@ -34,7 +34,7 @@ configured in your local machine as:
 Windows&nbsp;&nbsp;&nbsp;: **c:\projects**<br>
 Mac/Linux : **~/projects**
 
-the below instructions in should be common to all operating systems.
+the below instructions should be common to all operating systems.
 
 ```sh
 git clone https://github.com/jmani76/cryptocoins.git   # clone the project into your projects folder          
@@ -57,7 +57,7 @@ Once the .env file is set as described above, then execute the below commands to
 ```sh
 yarn install      # Installs the packages referenced in package.json file into your project
 
-yarn test         # Executes the all the tests, both UI and API tests. 
+yarn test         # Executes all the tests, both UI and API tests. 
 
 yarn run test-ui      # Executes only the UI tests
 
