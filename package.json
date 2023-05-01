@@ -4,7 +4,9 @@
   "main": "index.js",
   "license": "UNLICENSED",
   "scripts": {
-    "test": "cucumber-js --publish-quiet --require cucumber.conf.js --require features/steps/**/*.js --format @cucumber/pretty-formatter features/**/*.feature"
+    "test": "cucumber-js --publish-quiet --require cucumber.conf.js --require features/steps/**/*.js --format @cucumber/pretty-formatter features/**/*.feature",
+    "test-ui": "cucumber-js --publish-quiet --require cucumber.conf.js --require features/steps/**/*.js --format @cucumber/pretty-formatter features/**/*.feature --tags @ui",
+    "test-api": "cucumber-js --publish-quiet --require cucumber.conf.js --require features/steps/**/*.js --format @cucumber/pretty-formatter features/**/*.feature --tags @api"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^9.1.0",
@@ -12,5 +14,8 @@
     "@playwright/test": "^1.33.0",
     "dotenv": "^16.0.3",
     "playwright": "^1.33.0"
+  },
+  "dependencies": {
+    "axios": "^1.4.0"
   }
 }
