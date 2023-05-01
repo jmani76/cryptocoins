@@ -34,5 +34,5 @@ When('Using the received fiat currency amount to convert it into {string}',
 
 Then('I will get base currency equivalent in crypto currency', async () => {
     await expect(convertor.dataForConversion.convertedCurrencyAmount).toBeGreaterThan(0);
-    console.log("Amount of Cryptocurrencies: " + convertor.dataForConversion.convertedCurrencyAmount);
+    console.log("Amount of Crypto [" + convertor.dataForConversion.convertToCurrencySymbol +"]: " + convertor.dataForConversion.convertedCurrencyAmount);
 });

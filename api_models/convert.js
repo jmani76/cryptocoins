@@ -43,7 +43,14 @@ async function ConvertCurrency(requestUri) {
             if (apiResponse !== undefined && apiResponse != null) {
                 let currencyData = apiResponse.data;
                 if (currencyData.status["error_code"] === 0) {
-                    let quoteData = currencyData.data[dataForConversion.convertFromCurrencySymbol].quote;
+                    let quoteData;
+                    if (Object.prototype.toString.call(currencyData.data) === '[object Array]') {
+                        currencyData = currencyData.data[0];
+                        quoteData = currencyData.quote;
+                    }
+                    else {
+                        quoteData = currencyData.data[dataForConversion.convertFromCurrencySymbol].quote;
+                    }
                     if (quoteData !== undefined) {
                         let amount = quoteData[dataForConversion.convertToCurrencySymbol]["price"];
                         resolve(amount);

@@ -18,12 +18,12 @@ Given('I am on {string} website', async (url) => {
 
 When('I limit the max rows to show at {int}', async (number_of_rows) => {
     let status = await homepage.SetRows(number_of_rows);
-    await expect(status).toBeTruthy();
+    await expect(status).toBe(true);
 });
 
 Then('Only {int} rows are loaded', async (number_of_rows) => {
     let status = await homepage.VerifyNumberOfRowsOnDisplay(number_of_rows);
-    await expect(status).toBeTruthy();
+    await expect(status).toBe(true);
 });
 
 Then('I can capture the market cap performance parameters for the top {int} ranking cryptos',
@@ -34,14 +34,14 @@ Then('I can capture the market cap performance parameters for the top {int} rank
 
 When('I select algorithm as {string}', async (algorithm_type) => {
     let status = await homepage.ChooseAnAlgorithm(algorithm_type);
-    await expect(status).toBeTruthy();
+    await expect(status).toBe(true);
 });
 
 When('Apply more filters as given below', async (dataTable) => {
     const filterData = dataTable.hashes();
     let status = await homepage.SetMoreFilters(filterData[0].cryptoType, filterData[0].toggleMineableState,
         filterData[0].minPrice, filterData[0].maxPrice);
-    await expect(status).toBeTruthy();
+    await expect(status).toBe(true);
 });
 
 Then('I can capture the top {int} ranking cryptos from the filtered results',
