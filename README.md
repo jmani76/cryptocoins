@@ -21,7 +21,7 @@ to drive BDD Scenarios with **CoinMarketCap** website.
 
 ## Pre-requisites
 
-The run this solution, the following 2 should be installed on your system.
+To run this solution, the following 2 should be installed on your system.
 1. [node.js](https://nodejs.org/en) should be installed globally (system-wide).
 
 2. [yarn](https://classic.yarnpkg.com/lang/en/docs/install/) package manager should also be installed (locally to the projects folder or globally).
