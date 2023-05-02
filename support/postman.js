@@ -59,8 +59,8 @@ async function Get(endpoint) {
                     resolve(response);
                 }
                 else {
-                    resolve("Expected Status: " + response.status +
-                        ", but Actual Status: " + endpoint.expectedStatusCode)
+                    resolve("Actual Status: " + response.status +
+                        ", but Expected Status: " + endpoint.expectedStatusCode)
                 }
             })
             .catch((error) => {
